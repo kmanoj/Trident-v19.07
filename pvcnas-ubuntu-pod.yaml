@@ -1,0 +1,31 @@
+kind: Pod
+apiVersion: v1
+metadata:
+  name: ubuntu1
+spec:
+  volumes:
+    - name: task-pv-storage1
+      persistentVolumeClaim:
+       claimName: pv-claim-nas-ubuntu
+  containers:
+    - name: ubuntu-container1
+      image: ubuntu:18.04
+      command:
+        - /bin/sh
+        - "-c"
+        - "sleep 60m"
+      volumeMounts:
+        - mountPath: "/data"
+          name: task-pv-storage1
+---
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: pv-claim-nas-ubuntu
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+  storageClassName: storage-class-nas
